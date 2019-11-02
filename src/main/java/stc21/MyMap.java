@@ -2,7 +2,6 @@ package stc21;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -10,39 +9,13 @@ import java.util.Objects;
 
 public class MyMap<K,V> {
     private MapManager[] buckets;
-    //private int size;
     ArrayList l = new ArrayList();
 
     public MyMap() {
         this.buckets = (MapManager[]) Array.newInstance(MapManager.class,16);
-        //this.size = 0;
     }
-
     public MyMap(int buckets) {
         this.buckets = (MapManager[]) Array.newInstance(MapManager.class,buckets);
-        //this.size = 0;
-    }
-
-    public static void main(String[] args) {
-        String s1 = "s1";
-        String s2 = "s2";
-        String s3 = "s3";
-        String s4 = "s4";
-        int i1 = 1;
-        int i2 = 2;
-        int i3 = 3;
-        int i4 = 4;
-        HashMap map = new HashMap() {{
-            put(s1,i1);
-            put(s2,i2);
-            put(s3,i3);
-            put(s4,i4);
-        }};
-        Object a1 = map.put(null,null);
-        Object a2 = map.put(null,"5");
-        Object a3 = map.put(null,null);
-        Object a4 = map.put("null",6);
-        int f = 0;
     }
 
     private int getHash(K key) {

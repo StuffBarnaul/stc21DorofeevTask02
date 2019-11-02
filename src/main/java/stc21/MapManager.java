@@ -23,6 +23,12 @@ public class MapManager<K,V>
     private int size;
     boolean containsNullKey = false;
 
+    public K[] getKeys() {
+        return keys;
+    }
+    public V[] getValues() {
+        return values;
+    }
     public int getSize() {
         return size;
     }

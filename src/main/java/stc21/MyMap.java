@@ -58,9 +58,13 @@ public class MyMap<K,V> {
         return size;
     }
 
-    public V put(K key, V value){
-        int hash = getHash(key);
-        if (buckets[hash] == null) buckets[hash] = new MapManager(key.getClass(),value.getClass());
+    public V put(Object key, Object value){
+        int hash = getHash((K) key);
+        if (buckets[hash] == null){
+            if (key == null) key = new Object();
+            if (value == null) value = new Object();
+            buckets[hash] = new MapManager(key.getClass(),value.getClass());
+        }
         return (V) buckets[hash].addElement(key,value);
     }
 

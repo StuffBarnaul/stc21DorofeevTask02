@@ -1,4 +1,4 @@
-package stc21;
+package MyNewMap;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -16,50 +16,40 @@ import java.util.NoSuchElementException;
  (исключения при некоректных операциях).
  */
 
-public class MapManager<K,V>
+class Bucket<K,V>
 {
     private K[] keys;
     private V[] values;
     private int size;
-    boolean containsNullKey = false;
 
-    public K[] getKeys() {
-        return keys;
+    K[] getKeys() {
+        return Arrays.copyOf(keys,size);
     }
-    public V[] getValues() {
-        return values;
+    V[] getValues() {
+        return Arrays.copyOf(values,size);
     }
-    public int getSize() {
+    int getSize() {
         return size;
     }
 
-    public MapManager(Class<K> keyClass, Class<V> valueClass) {
+    Bucket(Class<K> keyClass, Class<V> valueClass) {
         this.keys = (K[]) Array.newInstance(keyClass, 1);
         this.values = (V[]) Array.newInstance(valueClass, 1);
         this.size = 0;
     }
 
-    public V addElement(K key,V value){
+    V addElement(K key, V value){
         boolean isAdding = true;
         V result = null;
         while (size > keys.length-1) increaseArraySize();
-        for (int i = 0; i < keys.length; i++) {
-            if (key == null){
-                if (keys[i] == null){
-                    if (containsNullKey) isAdding = false;
-                    result = values[i];
-                    values[i] = value;
-                    break;
-                }
-            } else if (key.equals(keys[i])) {
+        for (int i = 0; i < size; i++) {
+            if ((key == null && keys[i] == null) || (keys[i] != null && keys[i].equals(key))) {
                 isAdding = false;
                 result = values[i];
                 values[i] = value;
-                break;
             }
         }
         if (isAdding) {
-            if (key == null) containsNullKey = true;
             keys[size] = key;
             values[size] = value;
             size++;
@@ -67,62 +57,45 @@ public class MapManager<K,V>
         return result;
     }
 
-    public V removeElement(K key){
-        while (size < keys.length*2/3) decreaseArraySize();
-        for (int i = 0; i < keys.length; i++) {
-            if (key == null){
-                if (keys[i] == null){
-                    V result = values[i];
-                    for (int j = i; j < keys.length-1; j++) {
-                        keys[j] = keys[j+1];
-                        values[j] = values[j+1];
-                    }
-                    size--;
-                    return result;
+    V removeElement(K key) {
+        while (size < keys.length * 2 / 3) decreaseArraySize();
+        for (int i = 0; i < size; i++) {
+            if ((key == null && keys[i] == null) || (keys[i] != null && keys[i].equals(key))) {
+                V result = values[i];
+                for (int j = i; j < keys.length - 1; j++) {
+                    keys[j] = keys[j + 1];
+                    values[j] = values[j + 1];
                 }
-            } else if (keys[i] == null) {
-            } else {
-                if (key.equals(keys[i])){
-                    V result = values[i];
-                    for (int j = i; j < keys.length-1; j++) {
-                        keys[j] = keys[j+1];
-                        values[j] = values[j+1];
-                    }
-                    size--;
-                    return result;
-                }
+                size--;
+                return result;
             }
         }
         throw new NoSuchElementException();
     }
 
-    public V findElementByKey(K key){
+    V findElementByKey(K key){
         for (int i = 0; i < size; i++) {
-            if (key == null){
-                if (keys[i] == null) return values[i];
-            } else if (key.equals(keys[i])){
+            if ((key == null && keys[i] == null) || (keys[i] != null && keys[i].equals(key))) {
                 return values[i];
             }
         }
         return null;
     }
 
-    public boolean containsValue(V value) {
+    boolean containsValue(V value) {
         for (int i = 0; i < size; i++) {
-            if (value == null){
-                if (values[i] == null) return true;
-            } else if (values[i] == null) {
-            } else if (values[i].equals(value)) return true;
+            if ((value == null && values[i] == null) || (values[i] != null && values[i].equals(value))){
+                return true;
+            }
         }
         return false;
     }
 
-    public boolean containsKey(K key) {
+    boolean containsKey(K key) {
         for (int i = 0; i < size; i++) {
-            if (key == null) {
-                if (keys[i] == null) return true;
-            } else if (keys[i] == null) {
-            } else if (keys[i].equals(key)) return true;
+            if ((key == null && keys[i] == null) || (keys[i] != null && keys[i].equals(key))) {
+                return true;
+            }
         }
         return false;
     }

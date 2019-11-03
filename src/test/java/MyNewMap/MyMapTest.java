@@ -1,4 +1,4 @@
-package stc21;
+package MyNewMap;
 
 import org.junit.After;
 import org.junit.Before;

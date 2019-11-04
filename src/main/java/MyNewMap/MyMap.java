@@ -9,7 +9,6 @@ import java.util.Objects;
 
 public class MyMap<K,V> {
     private Bucket[] buckets;
-    ArrayList l = new ArrayList();
 
     public MyMap() {
         this.buckets = (Bucket[]) Array.newInstance(Bucket.class,16);
